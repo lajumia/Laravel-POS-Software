@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Helper\JWTToken;
-use App\Models\User;
 use Exception;
+use App\Mail\OTP;
+use App\Models\User;
+use App\Helper\JWTToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -56,6 +58,38 @@ class UserController extends Controller
             'message'=>'User not found'
         ],404);
         
+    }
+  
+  }
+
+
+  function SendOTPCode(Request $request)
+  {
+    try{
+        $email = $request->input('email');
+
+        $user = User::where('email','=',$request->input('email'))
+                    ->count();
+        
+        if($user==1){
+            $otp = rand(1000,9999);
+    
+            Mail::to($email)->send(new OTP($otp));
+            User::where('email','=',$email)->update(['otp'=>$otp]);
+            return response()->json([
+                'status'=>'success',
+                'message'=>'OTP Updated Successfully',
+                'otp'=>$otp
+            ],200);
+    
+    
+        }
+    }catch(Exception $e){
+        return response()->json([
+            'status'=>'fail',
+            'message'=>'Unable to send OTP'
+        ],500);
+    
     }
   
   }
