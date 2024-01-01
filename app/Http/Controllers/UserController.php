@@ -74,7 +74,7 @@ class UserController extends Controller
         if($user==1){
             $otp = rand(1000,9999);
     
-            Mail::to($email)->send(new OTP($otp));
+            //Mail::to($email)->send(new OTP($otp));
             User::where('email','=',$email)->update(['otp'=>$otp]);
             return response()->json([
                 'status'=>'success',
@@ -93,6 +93,42 @@ class UserController extends Controller
     }
   
   }
+
+  function VerifyOTP(Request $request)
+  {
+    $email = $request->input('email');
+    $otp = $request->input('otp');
+
+    $count = User::where('email','=',$email)
+                    ->where('otp','=',$otp)
+                    ->count();
+
+    try{
+
+    if($count==1)
+    {
+        $token = JWTToken::CreateTokenForSetPassword($request->input('email'));
+         User::where('email','=',$email)->update(['otp'=>0]);
+        return response()->json([
+            'status'=>'success',
+            'message'=>'OTP Verified Successfully',
+            'token'=>$token
+        ],200);
+    
+    }
+
+    }catch(Exception $e){
+
+        return response()->json([
+            'status'=>'fail',
+            'message'=>'Invalid OTP',
+            'error'=>$e->getMessage()
+        ],404);
+
+    }                             
+  }
+
+
 
 
 
