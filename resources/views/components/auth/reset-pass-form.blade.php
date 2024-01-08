@@ -34,7 +34,7 @@
         }
         else{
           showLoader()
-          let res=await axios.post("/reset-password",{password:password});
+          let res=await axios.post("/reset-password",{password:password}, headerToken());
           hideLoader();
           if(res.status===200 && res.data['status']==='success'){
               successToast(res.data['message']);

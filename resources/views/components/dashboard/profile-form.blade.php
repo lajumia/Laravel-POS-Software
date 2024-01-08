@@ -41,33 +41,37 @@
 </div>
 
 <script>
-    getProfile();
+    
     async function getProfile(){
+        
         showLoader();
-        let res=await axios.get("/user-profile")
+        let res=await axios.get("/user-detail",headerToken());
         hideLoader();
         if(res.status===200 && res.data['status']==='success'){
-            let data=res.data['data'];
-            document.getElementById('email').value=data['email'];
-            document.getElementById('firstName').value=data['firstName'];
-            document.getElementById('lastName').value=data['lastName'];
-            document.getElementById('mobile').value=data['mobile'];
-            document.getElementById('password').value=data['password'];
+            let data=res.data['user'];
+            document.getElementById('email').value=data['email']
+            document.getElementById('firstName').value=data['firstName']
+            document.getElementById('lastName').value=data['lastName']
+            document.getElementById('mobile').value=data['mobile']
+           
         }
         else{
             errorToast(res.data['message'])
         }
 
     }
+    getProfile();
 
     async function onUpdate() {
 
 
-        let firstName = document.getElementById('firstName').value;
-        let lastName = document.getElementById('lastName').value;
-        let mobile = document.getElementById('mobile').value;
-        let password = document.getElementById('password').value;
-
+        let postBody ={
+            "firstName" : document.getElementById('firstName').value,
+            "lastName" : document.getElementById('lastName').value,
+            "mobile" : document.getElementById('mobile').value,
+            "password" : document.getElementById('password').value,
+        }
+       
         if(firstName.length===0){
             errorToast('First Name is required')
         }
@@ -76,18 +80,11 @@
         }
         else if(mobile.length===0){
             errorToast('Mobile is required')
-        }
-        else if(password.length===0){
-            errorToast('Password is required')
+        
         }
         else{
             showLoader();
-            let res=await axios.post("/user-update",{
-                firstName:firstName,
-                lastName:lastName,
-                mobile:mobile,
-                password:password
-            })
+            let res=await axios.post("/user-update",postBody,headerToken())
             hideLoader();
             if(res.status===200 && res.data['status']==='success'){
                 successToast(res.data['message']);

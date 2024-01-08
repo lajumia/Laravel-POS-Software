@@ -17,6 +17,7 @@
 <script>
    async function VerifyOtp() {
         let otp = document.getElementById('otp').value;
+        let email = sessionStorage.getItem('email')
         if(otp.length !==4){
            errorToast('Invalid OTP')
         }
@@ -24,8 +25,10 @@
             showLoader();
             let res=await axios.post('/verify-otp', {
                 otp: otp,
-                email:sessionStorage.getItem('email')
-            })
+                email : email
+
+                
+            }, headerToken())
             hideLoader();
 
             if(res.status===200 && res.data['status']==='success'){

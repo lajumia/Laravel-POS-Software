@@ -40,14 +40,21 @@
             else{
                 showLoader();
                 let res=await axios.post("/user-login",{email:email, password:password});
+
+               
                 hideLoader()
                 if(res.status===200 && res.data['status']==='success'){
+                    let token = res.data['token'];
+                    setToken(token);
+                    
                     window.location.href="/dashboard";
-                }
-                else{
+                }else if(res.status===401){
+                    errorToast('User Unauthorized !');
+                }else{
                     errorToast(res.data['message']);
                 }
             }
     }
+
 
 </script>

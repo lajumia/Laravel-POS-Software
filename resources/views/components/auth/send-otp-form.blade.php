@@ -23,13 +23,14 @@
         }
         else{
             showLoader();
-            let res = await axios.post('/send-otp', {email: email});
+            let res = await axios.post('/send-otp', {email: email}, headerToken());
             hideLoader();
             if(res.status===200 && res.data['status']==='success'){
                 successToast(res.data['message'])
-                sessionStorage.setItem('email', email);
+                sessionStorage.setItem('email','${email}')
+
                 setTimeout(function (){
-                    window.location.href = '/verifyOtp';
+                    window.location.href = '/verifyOTP';
                 }, 1000)
             }
             else{

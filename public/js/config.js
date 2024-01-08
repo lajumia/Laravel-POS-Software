@@ -28,3 +28,27 @@ function errorToast(msg) {
         }
     }).showToast();
 }
+
+function setToken(token) {
+    localStorage.setItem('token', `Bearer ${token}`);
+
+}
+
+function getToken() {
+    return localStorage.getItem('token');
+
+}
+
+
+
+function headerToken(){
+    let token = getToken();
+    return {
+        headers: {
+            Authorization: token
+        }
+    }
+
+}
+
+

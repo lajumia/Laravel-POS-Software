@@ -44,7 +44,7 @@ class UserController extends Controller
                         'status'=>'Failded',
                         'message'=>"Unable to Register User",
                         'error'=>$e->getMessage()
-                    ],500);
+                    ],200);
                 
                 }
 
@@ -68,7 +68,7 @@ class UserController extends Controller
                 'message'=>'Invalid Credentials',
                 
 
-            ],401);
+            ],200);
         };
 
         $token = $user->createToken('authToken')->plainTextToken;
@@ -86,11 +86,11 @@ class UserController extends Controller
             'status'=>'fail',
             'message'=>'Unable to Login User',
             'error'=>$e->getMessage()
-        ],500);
+        ],200);
     
     
     }
-}  
+  }  
 
 
   function SendOTPCode(Request $request)
@@ -142,14 +142,14 @@ class UserController extends Controller
 
     if($count==1)
     {
-        $token = user()->createToken('authToken')->plainTextToken;
+        //$token = user()->createToken('authToken')->plainTextToken;
         //JWTToken::CreateTokenForSetPassword($request->input('email'));
        
          User::where('email','=',$email)->update(['otp'=>0]);
         return response()->json([
             'status'=>'success',
             'message'=>'OTP Verified Successfully',
-            'token'=>$token
+            
         ],200);
     
     }
@@ -160,7 +160,7 @@ class UserController extends Controller
             'status'=>'fail',
             'message'=>'Invalid OTP',
             'error'=>$e->getMessage()
-        ],404);
+        ],200);
 
     }                             
   }
@@ -196,10 +196,40 @@ class UserController extends Controller
     }
   }
 
+  function GetUserDetails()
+  {
+    try{
+        return response()->json([
+            'status' =>'success',
+            'message' => 'User Found Successfully',
+            'user' => Auth::user()
+            
+
+        ],200);
+    }catch(Exception $e){
+        return response()->json([
+            'status' =>'fail',
+            'message' => 'Unable to find user',
+            'error' => $e->getMessage()
+        ],200);
+    } 
+  }
 
 
 
-  // Controller for view
+
+  //<--Controller for view--------------------------------------------------->
+
+
+  // Registration View Page
+  function RegistrationPage()
+  {
+      
+      return view('pages.auth.registration-page');
+  
+  }
+
+
 
   function LoginPage()
   {
@@ -207,12 +237,7 @@ class UserController extends Controller
   }
 
 
-  function RegistrationPage()
-    {
-        
-        return view('pages.auth.registration-page');
-    
-    }
+
 
     function SendOTPPage()
     {
@@ -236,22 +261,17 @@ class UserController extends Controller
 
     function UserProfilePage()
     {
-        return response()->json([
-            'User Id ' => Auth::user()->id,
-            'User Name ' => Auth::user()->firstName,
-            'User Email ' => Auth::user()->email,
-            'User Mobile ' => Auth::user()->mobile,
-            'User Password ' => Auth::user()->password,
-            'User OTP ' => Auth::user()->otp,
-            'User Created At ' => Auth::user()->created_at,
-            'User Updated At ' => Auth::user()->updated_at
-
-        ],200); //view('pages.dashboard.profile-page');
+           
+        return view('pages.dashboard.profile-page');
     }
+
+    
 
     function UserLogout()
     {
-        Auth::user()->tokens()->delete();
+
+         Auth::user()->tokens()->delete();
+        // Auth::logout();
         // redirect user to login page
         return redirect('/userLogin');
     }
@@ -262,21 +282,20 @@ class UserController extends Controller
             $request->validate([
                 'firstName'=>'required|string|max:50',
                 'lastName'=>'required|string|max:50',
-                'email'=>'required|email|unique:users',
                 'mobile'=>'required|string|max:50',
                 'password'=>'required|string|min:4'
             ]);
             User::where('id','=',Auth::id())->update([
                 'firstName'=>$request->input('firstName'),
                 'lastName'=>$request->input('lastName'),
-                'email'=>$request->input('email'),
                 'mobile'=>$request->input('mobile'),
                 'password'=>Hash::make($request->input('password')),
+                
             ]);
             return response()->json([
                 'status'=>'success',
                 'message'=>'User updated successfully',
-                'user'=>Auth::user()
+                
             ],200);
         }catch(Exception $e){
             return response()->json([
