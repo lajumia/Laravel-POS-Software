@@ -32,9 +32,9 @@
    async function FillUpUpdateForm(id){
         document.getElementById('updateID').value=id;
         showLoader();
-        let res=await axios.post("/category-by-id",{id:id})
+        let res=await axios.post("/category-by-id",{id:id},headerToken())
         hideLoader();
-        document.getElementById('categoryNameUpdate').value=res.data['name'];
+        document.getElementById('categoryNameUpdate').value=res.data['categoryName'];
     }
 
     async function Update() {
@@ -48,16 +48,16 @@
         else{
             document.getElementById('update-modal-close').click();
             showLoader();
-            let res = await axios.post("/update-category",{name:categoryName,id:updateID})
+            let res = await axios.post("/update-category",{name:categoryName,id:updateID},headerToken())
             hideLoader();
 
-            if(res.status===200 && res.data===1){
+            if(res.status===200 && res.data['status']==='success'){
                 document.getElementById("update-form").reset();
-                successToast("Request success !")
+                successToast(res.data['message'])
                 await getList();
             }
             else{
-                errorToast("Request fail !")
+                errorToast(request.data['message'])
             }
 
 

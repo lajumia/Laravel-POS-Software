@@ -34,15 +34,15 @@
         else {
             document.getElementById('modal-close').click();
             showLoader();
-            let res = await axios.post("/create-category",{name:categoryName})
+            let res = await axios.post("/create-category",{name:categoryName},headerToken())
             hideLoader();
             if(res.status===201){
-                successToast('Request completed');
+                successToast('Category Created');
                 document.getElementById("save-form").reset();
                 await getList();
             }
             else{
-                errorToast("Request fail !")
+                errorToast(res.data['message'])
             }
         }
     }

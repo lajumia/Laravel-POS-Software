@@ -34,7 +34,7 @@ class CategoryController extends Controller
                 'status' => 'success',
                 'message' => 'Category Created',
                 'category' => $category
-            ],200);
+            ],201);
         
 
 
@@ -114,13 +114,27 @@ class CategoryController extends Controller
             return response()->json([
                 'status'=>'success',
                 'category'=>$category
-            ]);
+            ],200);
         }catch(Exception $e){
             return response()->json([
                 'status'=>'failed',
                 'message'=>$e->getMessage()
-            ]);
+            ],200);
         }
+    
+    }
+
+    public function CategoryByID(Request $request){
+        $category = Category::where('id',$request->input('id'))->first();
+        return response()->json([
+            'status'=>'success',
+            'categoryName'=>$category['name']
+        ],200);
+    
+    }
+
+    public function CategoryPage(){
+              return view('pages.dashboard.category-page');
     
     }
 

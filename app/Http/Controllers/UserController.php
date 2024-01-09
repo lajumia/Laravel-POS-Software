@@ -271,8 +271,9 @@ class UserController extends Controller
     {
 
          Auth::user()->tokens()->delete();
+        
         // Auth::logout();
-        // redirect user to login page
+        // redirect user to login pag
         return redirect('/userLogin');
     }
 

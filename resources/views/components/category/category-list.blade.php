@@ -32,23 +32,28 @@
 
 <script>
 
-getList();
+
 
 
 async function getList() {
 
 
     showLoader();
-    let res=await axios.get("/list-category");
+    let res=await axios.get("/list-category",headerToken());
+
     hideLoader();
 
     let tableList=$("#tableList");
-    let tableData=$("#tableData");
+    let tableData=$("#tableData");//Main table
 
-    tableData.DataTable().destroy();
-    tableList.empty();
 
-    res.data.forEach(function (item,index) {
+     tableData.DataTable().destroy();
+     tableList.empty();
+
+    if(res.status===200 && res.data['status']==='success'){
+        let data = res.data['category'];
+
+        data.forEach(function (item,index) {
         let row=`<tr>
                     <td>${index+1}</td>
                     <td>${item['name']}</td>
@@ -59,6 +64,9 @@ async function getList() {
                  </tr>`
         tableList.append(row)
     })
+    }else{
+        errorToast(res.data['message'])
+      }
 
     $('.editBtn').on('click', async function () {
            let id= $(this).data('id');
@@ -75,11 +83,13 @@ async function getList() {
     })
 
     new DataTable('#tableData',{
-       order:[[0,'desc']],
+       order:[[0,'asc']],
        lengthMenu:[5,10,15,20,30]
    });
 
 }
+
+getList();
 
 
 </script>

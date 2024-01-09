@@ -16,7 +16,7 @@ use App\Http\Middleware\TokenVerificationMiddleware;
 |
 */
 
-// Route for API
+// Route for User API
 Route::get('/', function () { return view('welcome');});
 Route::post('/user-registration',[UserController::class,'UserRegistration']);
 Route::post('/user-login',[UserController::class,'UserLogin']);
@@ -27,7 +27,7 @@ Route::get('/user-detail',[UserController::class,'GetUserDetails'])->middleware(
 Route::post('/user-update',[UserController::class,'UpdateUserDetails'])->middleware(['auth:sanctum']);
 
 
-// Route for View
+// Route for User View
 Route::get('/userRegistration',[UserController::class,'RegistrationPage']);
 Route::get('/userLogin',[UserController::class,'LoginPage'])->name('login');
 Route::get('/sendOTP',[UserController::class,'SendOTPPage']);
@@ -43,6 +43,9 @@ Route::post('/create-category',[CategoryController::class,'CreateCategory'])->mi
 Route::post('/update-category',[CategoryController::class,'UpdateCategory'])->middleware(['auth:sanctum']);
 Route::post('/delete-category',[CategoryController::class,'DeleteCategory'])->middleware(['auth:sanctum']);
 Route::get('/list-category',[CategoryController::class,'ListCategory'])->middleware(['auth:sanctum']);
+Route::post("/category-by-id",[CategoryController::class,'CategoryByID'])->middleware(['auth:sanctum']);
+Route::get('/categoryPage',[CategoryController::class,'CategoryPage']);
+
 
 
 
