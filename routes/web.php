@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CustomerController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
@@ -38,13 +39,31 @@ Route::get('/userProfile',[UserController::class,'UserProfilePage']);
 Route::get('/logout',[UserController::class,'UserLogout'])->middleware(['auth:sanctum']);
 
 
-//Category API
+//Category API and View
 Route::post('/create-category',[CategoryController::class,'CreateCategory'])->middleware(['auth:sanctum']);
 Route::post('/update-category',[CategoryController::class,'UpdateCategory'])->middleware(['auth:sanctum']);
 Route::post('/delete-category',[CategoryController::class,'DeleteCategory'])->middleware(['auth:sanctum']);
 Route::get('/list-category',[CategoryController::class,'ListCategory'])->middleware(['auth:sanctum']);
 Route::post("/category-by-id",[CategoryController::class,'CategoryByID'])->middleware(['auth:sanctum']);
 Route::get('/categoryPage',[CategoryController::class,'CategoryPage']);
+
+
+// Customer API and View
+Route::get('/customerPage',[CustomerController::class,'CustomerPage']);
+Route::get('/list-customer',[CustomerController::class,'CustomerList'])->middleware(['auth:sanctum']);
+Route::post('/customer-by-id',[CustomerController::class,'CustomerByID'])->middleware(['auth:sanctum']);
+Route::post('/create-customer',[CustomerController::class,'CreateCustomer'])->middleware(['auth:sanctum']);
+Route::post('/update-customer',[CustomerController::class,'UpdateCustomer'])->middleware(['auth:sanctum']);
+Route::post('/delete-customer',[CustomerController::class,'DeleteCustomer'])->middleware(['auth:sanctum']);
+
+
+// Product API and View
+// Route::get('/productPage',[UserController::class,'ProductPage']);
+// Route::get('/productList',[UserController::class,'ProductList'])->middleware(['auth:sanctum']);
+// Route::get('/productByID',[UserController::class,'ProductByID'])->middleware(['auth:sanctum']);
+// Route::post('/create-product',[UserController::class,'CreateProduct'])->middleware(['auth:sanctum']);
+
+
 
 
 

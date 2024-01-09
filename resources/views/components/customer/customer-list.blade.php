@@ -37,7 +37,7 @@ getList();
 
 async function getList() {
     showLoader();
-    let res=await axios.get("/list-customer");
+    let res=await axios.get("/list-customer",headerToken());
     hideLoader();
 
     let tableList=$("#tableList");
@@ -46,7 +46,9 @@ async function getList() {
     tableData.DataTable().destroy();
     tableList.empty();
 
-    res.data.forEach(function (item,index) {
+    let customers = res.data['customers'];
+
+    customers.forEach(function (item,index) {
         let row=`<tr>
                     <td>${index+1}</td>
                     <td>${item['name']}</td>

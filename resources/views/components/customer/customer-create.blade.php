@@ -51,19 +51,19 @@
             document.getElementById('modal-close').click();
 
             showLoader();
-            let res = await axios.post("/create-customer",{name:customerName,email:customerEmail,mobile:customerMobile})
+            let res = await axios.post("/create-customer",{name:customerName,email:customerEmail,mobile:customerMobile},headerToken())
             hideLoader();
 
-            if(res.status===201){
+            if(res.status===200){
 
-                successToast('Request completed');
+                successToast(res.data['message']);
 
                 document.getElementById("save-form").reset();
 
                 await getList();
             }
             else{
-                errorToast("Request fail !")
+                errorToast(res.data['message'])
             }
         }
     }

@@ -40,11 +40,12 @@
     async function FillUpUpdateForm(id){
         document.getElementById('updateID').value=id;
         showLoader();
-        let res=await axios.post("/customer-by-id",{id:id})
+        let res=await axios.post("/customer-by-id",{id:id},headerToken())
         hideLoader();
-        document.getElementById('customerNameUpdate').value=res.data['name'];
-        document.getElementById('customerEmailUpdate').value=res.data['email'];
-        document.getElementById('customerMobileUpdate').value=res.data['mobile'];
+        let customer = res.data['customer']
+        document.getElementById('customerNameUpdate').value=customer['name'];
+        document.getElementById('customerEmailUpdate').value=customer['email'];
+        document.getElementById('customerMobileUpdate').value=customer['mobile'];
     }
 
 
@@ -71,20 +72,20 @@
 
             showLoader();
 
-            let res = await axios.post("/update-customer",{name:customerName,email:customerEmail,mobile:customerMobile,id:updateID})
+            let res = await axios.post("/update-customer",{name:customerName,email:customerEmail,mobile:customerMobile,id:updateID},headerToken())
 
             hideLoader();
 
-            if(res.status===200 && res.data===1){
+            if(res.status===200 && res.data['status']==='success'){
 
-                successToast('Request completed');
+                successToast(res.data['message']);
 
                 document.getElementById("update-form").reset();
 
                 await getList();
             }
             else{
-                errorToast("Request fail !")
+                errorToast(res.data['message'])
             }
         }
     }
